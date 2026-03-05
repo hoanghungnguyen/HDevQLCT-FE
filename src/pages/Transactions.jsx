@@ -203,13 +203,13 @@ const Transactions = () => {
                 )}
             </div>
 
-            {/* Modal */}
             <TransactionModal 
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onSave={handleSaveTransaction}
                 transaction={editingTx}
                 categories={categories}
+                onCategoryDelete={fetchData}
             />
         </div>
     );

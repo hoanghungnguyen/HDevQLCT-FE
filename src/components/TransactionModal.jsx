@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { X, ChevronDown, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { categoryService } from '../services/categoryService';
 
-const TransactionModal = ({ isOpen, onClose, onSave, transaction, categories }) => {
+const TransactionModal = ({ isOpen, onClose, onSave, transaction, categories, onCategoryDelete }) => {
     const [formData, setFormData] = useState({
         categoryId: '',
         amount: '',
@@ -12,6 +13,19 @@ const TransactionModal = ({ isOpen, onClose, onSave, transaction, categories }) 
         newCategoryName: '',
         newCategoryType: 'expense'
     });
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef(null);
+
+    // Xử lý click ngoài dropdown để tự đóng
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsDropdownOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     // Reset form when modal opens/closes or when transaction changes
     useEffect(() => {
@@ -40,12 +54,50 @@ const TransactionModal = ({ isOpen, onClose, onSave, transaction, categories }) 
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        if (name === 'categoryId' && value === 'NEW') {
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSelectCategory = (value) => {
+        if (value === 'NEW') {
             setFormData(prev => ({ ...prev, categoryId: value, isNewCategory: true }));
-        } else if (name === 'categoryId') {
-            setFormData(prev => ({ ...prev, [name]: value, isNewCategory: false }));
         } else {
-            setFormData(prev => ({ ...prev, [name]: value }));
+            setFormData(prev => ({ ...prev, categoryId: value, isNewCategory: false }));
+        }
+        setIsDropdownOpen(false);
+    };
+
+    const handleDeleteCategory = async (catId, e) => {
+        e.stopPropagation(); // Ngăn sự kiện click list trigger việc select danh mục
+        if (window.confirm("Bạn có chắc muốn xoá danh mục này không?")) {
+            try {
+                await categoryService.delete(catId);
+                toast.success('Đã xoá danh mục!');
+                // Nếu đang select nó thì reset
+                if (formData.categoryId === catId || Number(formData.categoryId) === catId) {
+                    setFormData(prev => ({ ...prev, categoryId: '', isNewCategory: false }));
+                }
+                
+                // Gọi callback để parent component load lại danh sách categories
+                if (onCategoryDelete) {
+                    onCategoryDelete();
+                }
+                
+            } catch (error) {
+                console.error("Delete category error", error);
+                
+                // Tránh lỗi Object không thể render trong React (khi backend trả JSON Array/Object fallback)
+                let errorMsg = "Lỗi. Danh mục này có thể đang chứa giao dịch.";
+                if (error.response?.data) {
+                    if (typeof error.response.data === 'string') {
+                        errorMsg = error.response.data;
+                    } else if (error.response.data.message) {
+                        errorMsg = error.response.data.message;
+                    } else {
+                        errorMsg = JSON.stringify(error.response.data);
+                    }
+                }
+                toast.error(errorMsg);
+            }
         }
     };
 
@@ -101,21 +153,50 @@ const TransactionModal = ({ isOpen, onClose, onSave, transaction, categories }) 
                                 ⚠️ Bạn chưa có danh mục nào! Vui lòng làm mới trang.
                             </div>
                         ) : (
-                            <select 
-                                name="categoryId"
-                                value={formData.categoryId}
-                                onChange={handleChange}
-                                required
-                                className="w-full bg-[#F7F7F8] border-none rounded-xl px-4 py-3 text-[#303150] font-medium focus:ring-2 focus:ring-[#69ADFF] outline-none transition-shadow"
-                            >
-                                <option value="" disabled>-- Chọn danh mục --</option>
-                                {categories.map(cat => (
-                                    <option key={cat.id} value={cat.id}>
-                                        {cat.name} ({cat.type === 'income' ? 'Thu' : 'Chi'})
-                                    </option>
-                                ))}
-                                <option value="NEW" className="font-bold text-[#69ADFF]">➕ Thêm danh mục mới...</option>
-                            </select>
+                            <div className="relative" ref={dropdownRef}>
+                                <div 
+                                    className={`w-full bg-[#F7F7F8] border-none rounded-xl px-4 py-3 text-[#303150] font-medium cursor-pointer flex justify-between items-center transition-shadow ${isDropdownOpen ? 'ring-2 ring-[#69ADFF]' : ''}`}
+                                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                >
+                                    <span>
+                                        {formData.isNewCategory 
+                                            ? "➕ Thêm danh mục mới..." 
+                                            : categories.find(c => c.id === Number(formData.categoryId))?.name || "-- Chọn danh mục --"}
+                                    </span>
+                                    <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                                </div>
+
+                                {isDropdownOpen && (
+                                    <div className="absolute z-10 w-full mt-2 bg-white border border-gray-100 rounded-xl shadow-xl max-h-60 overflow-y-auto animate-in fade-in slide-in-from-top-1">
+                                        <div className="p-1">
+                                            {categories.map(cat => (
+                                                <div 
+                                                    key={cat.id} 
+                                                    className={`flex justify-between items-center px-4 py-3 rounded-lg hover:bg-gray-50 cursor-pointer text-sm font-medium transition-colors ${Number(formData.categoryId) === cat.id ? 'bg-blue-50 text-[#69ADFF]' : 'text-[#303150]'}`}
+                                                    onClick={() => handleSelectCategory(cat.id)}
+                                                >
+                                                    <span>{cat.name} <span className="text-gray-400 text-xs ml-1">({cat.type === 'income' ? 'Thu' : 'Chi'})</span></span>
+                                                    <button 
+                                                        type="button"
+                                                        onClick={(e) => handleDeleteCategory(cat.id, e)} 
+                                                        className="text-gray-300 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-md transition-all"
+                                                        title="Xoá danh mục này"
+                                                    >
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </button>
+                                                </div>
+                                            ))}
+                                            <div className="border-t border-gray-100 mt-1 pt-1"></div>
+                                            <div 
+                                                className="px-4 py-3 font-bold text-[#69ADFF] hover:bg-blue-50 cursor-pointer rounded-lg text-sm flex items-center" 
+                                                onClick={() => handleSelectCategory('NEW')}
+                                            >
+                                                ➕ Thêm danh mục mới...
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         )}
                         
                         {/* Hiển thị form con nếu chọn Thêm mới danh mục */}
