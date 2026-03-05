@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+/* Common resets or global styles */
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+/* Custom Utilities can be added below */
