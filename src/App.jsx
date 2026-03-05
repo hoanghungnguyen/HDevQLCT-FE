@@ -11,6 +11,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Transactions from './pages/Transactions';
 import Goals from './pages/Goals';
+import Statistics from './pages/Statistics';
 
 function App() {
   return (
@@ -25,8 +26,10 @@ function App() {
             {/* Protected Routes - Yêu cầu đăng nhập */}
             <Route element={<ProtectedRoute />}>
               <Route path="/" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/transactions" element={<Transactions />} />
               <Route path="/goals" element={<Goals />} />
+              <Route path="/statistics" element={<Statistics />} />
             </Route>
 
             {/* Fallback 404 */}

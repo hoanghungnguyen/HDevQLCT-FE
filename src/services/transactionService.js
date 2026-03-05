@@ -29,5 +29,15 @@ export const transactionService = {
     delete: async (id) => {
         const response = await api.delete(`/transactions/${id}`);
         return response.data;
+    },
+
+    getMonthlyTrend: async (year) => {
+        const response = await api.get(`/transactions/stats/trend?year=${year}`);
+        return response.data;
+    },
+
+    getCategoryExpense: async (month, year) => {
+        const response = await api.get(`/transactions/stats/category?month=${month}&year=${year}`);
+        return response.data;
     }
 };

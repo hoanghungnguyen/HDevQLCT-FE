@@ -2,11 +2,9 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
-    LayoutDashboard, 
-    TrendingUp, 
-    ArrowLeftRight, 
+    Home,
     CreditCard, 
-    BarChart2, 
+    PieChart, 
     Settings, 
     LogOut, 
     Wallet,
@@ -18,10 +16,10 @@ const Sidebar = () => {
     const navigate = useNavigate();
 
     const menuItems = [
-        { name: 'Tổng quan', path: '/', icon: LayoutDashboard },
-        { name: 'Mục tiêu', path: '/goals', icon: Target },
-        { name: 'Giao dịch', path: '/transactions', icon: ArrowLeftRight },
-        { name: 'Thống kê', path: '/statistics', icon: BarChart2 },
+        { id: 'dashboard', icon: <Home className="w-5 h-5 mr-4" />, label: 'Tổng quan', path: '/dashboard' },
+        { id: 'transactions', icon: <CreditCard className="w-5 h-5 mr-4" />, label: 'Giao dịch', path: '/transactions' },
+        { id: 'goals', icon: <Target className="w-5 h-5 mr-4" />, label: 'Mục tiêu', path: '/goals' },
+        { id: 'statistics', icon: <PieChart className="w-5 h-5 mr-4" />, label: 'Báo cáo', path: '/statistics' },
     ];
 
     const bottomItems = [
@@ -41,11 +39,10 @@ const Sidebar = () => {
                 <span className="text-xl font-bold tracking-wider text-gray-800">QLCT APP</span>
             </div>
 
-            {/* Menu chính */}
             <div className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
                 {menuItems.map((item) => (
                     <NavLink
-                        key={item.name}
+                        key={item.id}
                         to={item.path}
                         className={({ isActive }) =>
                             `flex items-center px-4 py-3 rounded-xl transition-colors ${
@@ -55,8 +52,8 @@ const Sidebar = () => {
                             }`
                         }
                     >
-                        <item.icon className="h-5 w-5 mr-4" />
-                        {item.name}
+                        {item.icon}
+                        {item.label}
                     </NavLink>
                 ))}
             </div>
