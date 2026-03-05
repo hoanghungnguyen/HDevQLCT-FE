@@ -1,15 +1,40 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { formatCurrency } from '../utils/formatters';
 
-const data = [
-  { name: 'Nhà cửa', value: 4500000, color: '#0DBACC' },
-  { name: 'Ăn uống', value: 3200000, color: '#F18AB5' },
-  { name: 'Môi giới', value: 1500000, color: '#9F7FE0' },
-  { name: 'Sinh hoạt', value: 800000, color: '#69ADFF' },
-];
+const CHART_COLORS = ['#0DBACC', '#F18AB5', '#9F7FE0', '#69ADFF', '#FFAE4A'];
 
-const ActivityDonut = ({ stats }) => {
+const ActivityDonut = ({ transactions = [] }) => {
+    
+    // Group expenses by category for the current month
+    const data = useMemo(() => {
+        const now = new Date();
+        const categoryMap = {};
+
+        transactions.forEach(tx => {
+            const txDate = new Date(tx.transactionDate);
+            if (
+                tx.type === 'expense' && 
+                txDate.getMonth() === now.getMonth() && 
+                txDate.getFullYear() === now.getFullYear()
+            ) {
+                const catName = tx.categoryName || 'Khác';
+                categoryMap[catName] = (categoryMap[catName] || 0) + tx.amount;
+            }
+        });
+
+        // Convert map to array and sort by value desc
+        const sortedData = Object.keys(categoryMap)
+            .map(key => ({ name: key, value: categoryMap[key] }))
+            .sort((a, b) => b.value - a.value);
+
+        // Assign colors securely
+        return sortedData.map((item, index) => ({
+            ...item,
+            color: CHART_COLORS[index % CHART_COLORS.length]
+        }));
+    }, [transactions]);
+
     // Tổng cộng để render giữa biểu đồ tròn
     const totalSpent = data.reduce((acc, current) => acc + current.value, 0);
 
@@ -56,18 +81,20 @@ const ActivityDonut = ({ stats }) => {
                 
                 {/* Legend list bên phải */}
                 <div className="w-[45%] flex flex-col space-y-4">
-                    {data.map((item, index) => {
-                        const percent = Math.round((item.value / totalSpent) * 100);
+                    {data.length > 0 ? data.slice(0, 4).map((item, index) => {
+                        const percent = totalSpent > 0 ? Math.round((item.value / totalSpent) * 100) : 0;
                         return (
                             <div key={index} className="flex items-center justify-between">
-                                <div className="flex items-center">
-                                    <span className="w-2.5 h-2.5 rounded-full mr-3" style={{ backgroundColor: item.color }}></span>
-                                    <span className="text-[#7E7F90] text-sm font-medium">{item.name}</span>
+                                <div className="flex items-center truncate pr-2">
+                                    <span className="w-2.5 h-2.5 rounded-full mr-3 shrink-0" style={{ backgroundColor: item.color }}></span>
+                                    <span className="text-[#7E7F90] text-sm font-medium truncate" title={item.name}>{item.name}</span>
                                 </div>
                                 <span className="text-[#303150] text-sm font-bold">{percent}%</span>
                             </div>
                         );
-                    })}
+                    }) : (
+                        <div className="text-sm text-gray-400">Không có dữ liệu chi tiêu tháng này</div>
+                    )}
                 </div>
             </div>
         </div>

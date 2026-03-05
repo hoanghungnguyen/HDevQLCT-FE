@@ -1,16 +1,34 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { formatCurrency } from '../utils/formatters';
 
-const data = [
-  { name: 'T1', total: 2000 },
-  { name: 'T2', total: 3200 },
-  { name: 'T3', total: 2800 },
-  { name: 'T4', total: 4653 },
-  { name: 'T5', total: 3800 },
-  { name: 'T6', total: 4200 },
-];
+const IncomeChart = ({ transactions = [] }) => {
+    // Calculate last 6 months of income
+    const data = useMemo(() => {
+        const result = [];
+        const now = new Date();
+        
+        for (let i = 5; i >= 0; i--) {
+            const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            const monthStr = `T${d.getMonth() + 1}`;
+            
+            // Sum income for this month
+            const monthIncome = transactions.reduce((sum, tx) => {
+                const txDate = new Date(tx.transactionDate);
+                if (
+                    tx.type === 'income' && 
+                    txDate.getMonth() === d.getMonth() && 
+                    txDate.getFullYear() === d.getFullYear()
+                ) {
+                    return sum + tx.amount;
+                }
+                return sum;
+            }, 0);
 
-const IncomeChart = () => {
+            result.push({ name: monthStr, total: monthIncome });
+        }
+        return result;
+    }, [transactions]);
     return (
         <div className="bg-white p-6 rounded-[20px] shadow-sm border border-gray-50 flex flex-col col-span-1 lg:col-span-2 min-h-[350px]">
             <div className="flex justify-between items-center mb-6">
@@ -44,9 +62,11 @@ const IncomeChart = () => {
                             axisLine={false} 
                             tickLine={false} 
                             tick={{ fill: '#BDBDCB', fontSize: 13 }}
-                            tickFormatter={(value) => `$${value}`}
+                            tickFormatter={(value) => formatCurrency(value)}
+                            width={80}
                         />
                         <Tooltip 
+                            formatter={(value) => formatCurrency(value)}
                             contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}
                             labelStyle={{ color: '#7E7F90', fontWeight: 'bold', marginBottom: '4px' }}
                             itemStyle={{ color: '#69ADFF', fontWeight: 'bold' }}

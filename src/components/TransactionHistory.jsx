@@ -39,22 +39,27 @@ const TransactionHistory = ({ transactions }) => {
                                     <td className="py-4 pl-2">
                                         <div className="flex items-center">
                                             <div className="w-10 h-10 rounded-full bg-[#F7F7F8] flex items-center justify-center mr-4">
-                                                {getIcon(tx.note)}
+                                                {getIcon(tx.note || tx.categoryName)}
                                             </div>
-                                            <span className="text-sm font-bold text-[#303150]">
-                                                {tx.note || 'Giao dịch không tên'}
-                                            </span>
+                                            <div className="flex flex-col">
+                                                <span className="text-sm font-bold text-[#303150]">
+                                                    {tx.note || tx.categoryName || 'Giao dịch không tên'}
+                                                </span>
+                                                <span className="text-xs font-semibold text-[#BDBDCB] mt-0.5">
+                                                    {tx.categoryName || 'Chưa phân loại'}
+                                                </span>
+                                            </div>
                                         </div>
                                     </td>
                                     <td className="py-4 text-sm font-semibold text-[#7E7F90]">
-                                        {tx.amount > 0 ? "Thu nhập" : "Chi tiêu"}
+                                        {tx.type === 'income' ? "Thu nhập" : "Chi tiêu"}
                                     </td>
                                     <td className="py-4 text-sm font-semibold text-[#7E7F90]">
                                         {formatDate(tx.transactionDate)}
                                     </td>
                                     <td className="py-4 text-right pr-2">
-                                        <span className={`text-sm font-extrabold ${tx.amount > 0 ? 'text-[#0DBACC]' : 'text-[#303150]'}`}>
-                                            {tx.amount > 0 ? '+' : ''}{formatCurrency(Math.abs(tx.amount))}
+                                        <span className={`text-sm font-extrabold ${tx.type === 'income' ? 'text-[#0DBACC]' : 'text-[#303150]'}`}>
+                                            {tx.type === 'income' ? '+' : '-'}{formatCurrency(tx.amount)}
                                         </span>
                                     </td>
                                 </tr>

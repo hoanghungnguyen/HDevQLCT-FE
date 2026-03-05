@@ -18,10 +18,10 @@ const Dashboard = () => {
                 const statsData = await transactionService.getStats();
                 setStats(statsData);
                 
-                // Fetch recent transactions (Current Month)
-                const currentMonth = new Date().getMonth() + 1;
-                const currentYear = new Date().getFullYear();
-                const txData = await transactionService.getFiltered(currentMonth, currentYear);
+                // Fetch all transactions for history and charts
+                const txData = await transactionService.getAll();
+                // Sort descending by date
+                txData.sort((a, b) => new Date(b.transactionDate) - new Date(a.transactionDate));
                 setTransactions(txData);
             } catch (error) {
                 console.error("Failed to fetch dashboard data", error);
@@ -34,7 +34,24 @@ const Dashboard = () => {
     }, []);
 
     if (loading) {
-        return <div className="p-8 text-center text-gray-500">Đang tải dữ liệu tổng quan...</div>;
+        return (
+            <div className="max-w-7xl mx-auto py-2 animate-pulse">
+                {/* Skeleton for SummaryCards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 mt-6">
+                    {[1, 2, 3, 4].map(n => <div key={n} className="h-[140px] bg-gray-200 rounded-[20px]"></div>)}
+                </div>
+                {/* Skeleton for Middle Section */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <div className="col-span-1 lg:col-span-2 h-[350px] bg-gray-200 rounded-[20px]"></div>
+                    <div className="h-[350px] bg-gray-200 rounded-[20px]"></div>
+                </div>
+                {/* Skeleton for Bottom Section */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div className="col-span-1 lg:col-span-2 h-[350px] bg-gray-200 rounded-[20px]"></div>
+                    <div className="h-[350px] bg-gray-200 rounded-[20px]"></div>
+                </div>
+            </div>
+        );
     }
 
     return (
@@ -45,8 +62,8 @@ const Dashboard = () => {
             
             {/* Middle Section: Income Chart & Donut Chart */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                <IncomeChart />
-                <ActivityDonut stats={stats} />
+                <IncomeChart transactions={transactions} />
+                <ActivityDonut transactions={transactions} />
             </div>
 
             {/* Bottom Section: Transactions History & Goals */}
