@@ -71,20 +71,26 @@ const TransactionModal = ({ isOpen, onClose, onSave, transaction, categories }) 
                     {/* Danh mục */}
                     <div>
                         <label className="block text-sm font-semibold text-[#7E7F90] mb-2">Danh mục</label>
-                        <select 
-                            name="categoryId"
-                            value={formData.categoryId}
-                            onChange={handleChange}
-                            required
-                            className="w-full bg-[#F7F7F8] border-none rounded-xl px-4 py-3 text-[#303150] font-medium focus:ring-2 focus:ring-[#69ADFF] outline-none transition-shadow"
-                        >
-                            <option value="" disabled>-- Chọn danh mục --</option>
-                            {categories.map(cat => (
-                                <option key={cat.id} value={cat.id}>
-                                    {cat.name} ({cat.type === 'income' ? 'Thu' : 'Chi'})
-                                </option>
-                            ))}
-                        </select>
+                        {categories.length === 0 ? (
+                            <div className="w-full bg-red-50 border border-red-100 rounded-xl px-4 py-3 text-red-600 text-sm font-medium">
+                                ⚠️ Bạn chưa có danh mục nào! Vui lòng làm mới trang.
+                            </div>
+                        ) : (
+                            <select 
+                                name="categoryId"
+                                value={formData.categoryId}
+                                onChange={handleChange}
+                                required
+                                className="w-full bg-[#F7F7F8] border-none rounded-xl px-4 py-3 text-[#303150] font-medium focus:ring-2 focus:ring-[#69ADFF] outline-none transition-shadow"
+                            >
+                                <option value="" disabled>-- Chọn danh mục --</option>
+                                {categories.map(cat => (
+                                    <option key={cat.id} value={cat.id}>
+                                        {cat.name} ({cat.type === 'income' ? 'Thu' : 'Chi'})
+                                    </option>
+                                ))}
+                            </select>
+                        )}
                     </div>
 
                     {/* Số tiền */}
@@ -142,7 +148,12 @@ const TransactionModal = ({ isOpen, onClose, onSave, transaction, categories }) 
                         </button>
                         <button 
                             type="submit" 
-                            className="flex-1 py-3 bg-[#69ADFF] hover:bg-[#5a9aeb] text-white font-bold rounded-xl transition-colors shadow-md shadow-blue-200"
+                            disabled={categories.length === 0}
+                            className={`flex-1 py-3 font-bold rounded-xl transition-colors shadow-md ${
+                                categories.length === 0 
+                                ? "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none" 
+                                : "bg-[#69ADFF] hover:bg-[#5a9aeb] text-white shadow-blue-200"
+                            }`}
                         >
                             {transaction ? 'Cập nhật' : 'Lưu giao dịch'}
                         </button>
