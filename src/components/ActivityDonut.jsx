@@ -49,18 +49,18 @@ const ActivityDonut = ({ transactions = [] }) => {
             <div className="flex-1 flex flex-row items-center justify-between">
                 
                 {/* Vòng tròn bên trái */}
-                <div className="w-1/2 relative flex justify-center items-center">
-                    <div className="absolute text-center z-10 flex flex-col items-center justify-center">
-                        <span className="text-[#303150] dark:text-white font-extrabold text-xl">{formatCurrency(totalSpent)}</span>
-                        <span className="text-[#BDBDCB] dark:text-gray-400 text-xs font-semibold uppercase mt-1">Đã chi</span>
+                <div className="w-[55%] relative flex justify-center items-center">
+                    <div className="absolute text-center z-10 flex flex-col items-center justify-center pointer-events-none">
+                        <span className="text-[#303150] dark:text-white font-extrabold text-lg">{formatCurrency(totalSpent)}</span>
+                        <span className="text-[#BDBDCB] dark:text-gray-400 text-[10px] font-semibold uppercase mt-0.5">Đã chi</span>
                     </div>
                     
                     <ResponsiveContainer width="100%" height={220}>
                         <PieChart>
                             <Pie
                                 data={data}
-                                innerRadius={75}
-                                outerRadius={90}
+                                innerRadius={65}
+                                outerRadius={85}
                                 paddingAngle={5}
                                 dataKey="value"
                                 stroke="none"
@@ -85,16 +85,16 @@ const ActivityDonut = ({ transactions = [] }) => {
                 </div>
                 
                 {/* Legend list bên phải */}
-                <div className="w-[45%] flex flex-col space-y-4">
+                <div className="w-[40%] flex flex-col space-y-4">
                     {data.length > 0 ? data.slice(0, 4).map((item, index) => {
                         const percent = totalSpent > 0 ? Math.round((item.value / totalSpent) * 100) : 0;
                         return (
                             <div key={index} className="flex items-center justify-between">
                                 <div className="flex items-center truncate pr-2">
-                                    <span className="w-2.5 h-2.5 rounded-full mr-3 shrink-0" style={{ backgroundColor: item.color }}></span>
-                                    <span className="text-[#7E7F90] dark:text-gray-300 text-sm font-medium truncate" title={item.name}>{item.name}</span>
+                                    <span className="w-2.5 h-2.5 rounded-full mr-2 shrink-0" style={{ backgroundColor: item.color }}></span>
+                                    <span className="text-[#7E7F90] dark:text-gray-300 text-xs font-medium truncate" title={item.name}>{item.name}</span>
                                 </div>
-                                <span className="text-[#303150] dark:text-white text-sm font-bold">{percent}%</span>
+                                <span className="text-[#303150] dark:text-white text-xs font-bold">{percent}%</span>
                             </div>
                         );
                     }) : (
