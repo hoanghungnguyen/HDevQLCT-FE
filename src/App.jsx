@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
+import { Toaster } from 'react-hot-toast';
+
 import ProtectedRoute from './components/ProtectedRoute';
 
 // Pages
@@ -13,6 +15,7 @@ function App() {
   return (
     <Router>
       <div className="min-h-screen bg-[#F7F7F8]">
+        <Toaster position="top-right" />
         <Routes>
             {/* Public Routes */}
             <Route path="/login" element={<Login />} />

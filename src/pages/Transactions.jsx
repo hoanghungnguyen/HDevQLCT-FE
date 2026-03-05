@@ -51,10 +51,29 @@ const Transactions = () => {
 
     const handleSaveTransaction = async (formData) => {
         try {
+            let finalCategoryId = formData.categoryId;
+
+            // Xử lý tạo mới Danh mục nếu người dùng chọn tùy chọn "Thêm danh mục mới"
+            if (formData.isNewCategory) {
+                const newCat = await categoryService.create({
+                    name: formData.newCategoryName,
+                    type: formData.newCategoryType,
+                    icon: 'plus'
+                });
+                finalCategoryId = newCat.id; // Lấy ID của danh mục vừa tạo xong
+            }
+
+            const txData = {
+                categoryId: finalCategoryId,
+                amount: formData.amount,
+                note: formData.note,
+                transactionDate: formData.transactionDate
+            };
+
             if (editingTx) {
-                await transactionService.update(editingTx.id, formData);
+                await transactionService.update(editingTx.id, txData);
             } else {
-                await transactionService.create(formData);
+                await transactionService.create(txData);
             }
             setIsModalOpen(false);
             fetchData(); // Reload list

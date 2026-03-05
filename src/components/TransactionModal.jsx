@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const TransactionModal = ({ isOpen, onClose, onSave, transaction, categories }) => {
     const [formData, setFormData] = useState({
         categoryId: '',
         amount: '',
         note: '',
-        transactionDate: new Date().toISOString().split('T')[0] // YYYY-MM-DD
+        transactionDate: new Date().toISOString().split('T')[0], // YYYY-MM-DD
+        isNewCategory: false,
+        newCategoryName: '',
+        newCategoryType: 'expense'
     });
 
     // Reset form when modal opens/closes or when transaction changes
@@ -16,38 +20,59 @@ const TransactionModal = ({ isOpen, onClose, onSave, transaction, categories }) 
                 categoryId: transaction.categoryId || '',
                 amount: Math.abs(transaction.amount) || '',
                 note: transaction.note || '',
-                transactionDate: transaction.transactionDate || new Date().toISOString().split('T')[0]
+                transactionDate: transaction.transactionDate || new Date().toISOString().split('T')[0],
+                isNewCategory: false,
+                newCategoryName: '',
+                newCategoryType: 'expense'
             });
         } else {
             setFormData({
                 categoryId: categories.length > 0 ? categories[0].id : '',
                 amount: '',
                 note: '',
-                transactionDate: new Date().toISOString().split('T')[0]
+                transactionDate: new Date().toISOString().split('T')[0],
+                isNewCategory: false,
+                newCategoryName: '',
+                newCategoryType: 'expense'
             });
         }
     }, [transaction, isOpen, categories]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        if (name === 'categoryId' && value === 'NEW') {
+            setFormData(prev => ({ ...prev, categoryId: value, isNewCategory: true }));
+        } else if (name === 'categoryId') {
+            setFormData(prev => ({ ...prev, [name]: value, isNewCategory: false }));
+        } else {
+            setFormData(prev => ({ ...prev, [name]: value }));
+        }
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         
-        // Find category to determine if it's expense or income
-        const selectedCat = categories.find(c => c.id === Number(formData.categoryId));
         let finalAmount = Number(formData.amount);
-        
-        // Mặc định expense sẽ lưu số âm (nếu logic backend hoặc frontend yêu cầu), 
-        // nhưng backend Java TransactionDto hiện tại có vẻ lưu số dương và dựa vào Category Type.
-        // Tuy nhiên theo code hiện tại, Transactions list đang check `tx.type === 'income'`.
-        // Việc cấp số tiền có kèm dấu trừ hay không tuỳ vào policy. Tạm thời pass value positive.
+
+        // Validation: Số tiền phải lớn hơn 0
+        if (finalAmount <= 0) {
+            toast.error("Số tiền phải lớn hơn 0!");
+            return;
+        }
+
+        // Validation: Ngày giao dịch không được lớn hơn ngày hiện tại
+        const selectedDate = new Date(formData.transactionDate);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Normalize today to midnight for comparison
+
+        if (selectedDate > today) {
+            toast.error("Đến từ tương lai à? Ngày giao dịch không được lớn hơn hôm nay!");
+            return;
+        }
 
         onSave({
             ...formData,
-            categoryId: Number(formData.categoryId),
+            categoryId: formData.isNewCategory ? 'NEW' : Number(formData.categoryId),
             amount: finalAmount
         });
     };
@@ -89,7 +114,50 @@ const TransactionModal = ({ isOpen, onClose, onSave, transaction, categories }) 
                                         {cat.name} ({cat.type === 'income' ? 'Thu' : 'Chi'})
                                     </option>
                                 ))}
+                                <option value="NEW" className="font-bold text-[#69ADFF]">➕ Thêm danh mục mới...</option>
                             </select>
+                        )}
+                        
+                        {/* Hiển thị form con nếu chọn Thêm mới danh mục */}
+                        {formData.isNewCategory && (
+                            <div className="mt-4 p-4 bg-blue-50/50 border border-blue-100 rounded-xl space-y-4 animate-in fade-in slide-in-from-top-2">
+                                <div>
+                                    <label className="block text-xs font-bold text-[#69ADFF] mb-1">Tên danh mục mới</label>
+                                    <input 
+                                        type="text"
+                                        name="newCategoryName"
+                                        value={formData.newCategoryName}
+                                        onChange={handleChange}
+                                        required
+                                        placeholder="Ví dụ: Đổ xăng, Cà phê..."
+                                        className="w-full bg-white border-none rounded-lg px-3 py-2.5 text-sm text-[#303150] shadow-sm focus:ring-2 focus:ring-[#69ADFF] outline-none"
+                                    />
+                                </div>
+                                <div className="flex gap-4">
+                                    <label className="flex items-center space-x-2 text-sm font-medium text-[#303150] cursor-pointer">
+                                        <input 
+                                            type="radio" 
+                                            name="newCategoryType" 
+                                            value="expense"
+                                            checked={formData.newCategoryType === 'expense'}
+                                            onChange={handleChange}
+                                            className="text-[#F18AB5] focus:ring-[#F18AB5]"
+                                        />
+                                        <span>Khoản Chi (-)</span>
+                                    </label>
+                                    <label className="flex items-center space-x-2 text-sm font-medium text-[#303150] cursor-pointer">
+                                        <input 
+                                            type="radio" 
+                                            name="newCategoryType" 
+                                            value="income"
+                                            checked={formData.newCategoryType === 'income'}
+                                            onChange={handleChange}
+                                            className="text-[#0DBACC] focus:ring-[#0DBACC]"
+                                        />
+                                        <span>Khoản Thu (+)</span>
+                                    </label>
+                                </div>
+                            </div>
                         )}
                     </div>
 
@@ -148,9 +216,9 @@ const TransactionModal = ({ isOpen, onClose, onSave, transaction, categories }) 
                         </button>
                         <button 
                             type="submit" 
-                            disabled={categories.length === 0}
+                            disabled={categories.length === 0 && !formData.isNewCategory}
                             className={`flex-1 py-3 font-bold rounded-xl transition-colors shadow-md ${
-                                categories.length === 0 
+                                (categories.length === 0 && !formData.isNewCategory)
                                 ? "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none" 
                                 : "bg-[#69ADFF] hover:bg-[#5a9aeb] text-white shadow-blue-200"
                             }`}
