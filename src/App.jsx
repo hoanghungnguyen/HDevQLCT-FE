@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
 
 // Pages
@@ -13,10 +12,8 @@ import Transactions from './pages/Transactions';
 function App() {
   return (
     <Router>
-      <div className="min-h-screen flex flex-col bg-gray-50">
-        <Navbar />
-        <main className="flex-grow">
-          <Routes>
+      <div className="min-h-screen bg-[#F7F7F8]">
+        <Routes>
             {/* Public Routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
@@ -30,7 +27,6 @@ function App() {
             {/* Fallback 404 */}
             <Route path="*" element={<div className="text-center py-20 text-xl font-bold text-gray-500">404 - Trang không tồn tại</div>} />
           </Routes>
-        </main>
       </div>
     </Router>
   );
