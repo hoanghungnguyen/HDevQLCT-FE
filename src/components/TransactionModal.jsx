@@ -135,11 +135,13 @@ const TransactionModal = ({
     }
 
     // Validation: Ngày giao dịch không được lớn hơn ngày hiện tại
-    const selectedDate = new Date(formData.transactionDate);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Normalize today to midnight for comparison
+    const todayStr = new Date().toISOString().split("T")[0]; // YYYY-MM-DD local time theo UTC
+    
+    // Nếu timezone lệch khiến toISOString ra ngày hôm qua lúc sáng sớm ở VN, ta tự parse an toàn hơn:
+    const now = new Date();
+    const localTodayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
-    if (selectedDate > today) {
+    if (formData.transactionDate > localTodayStr) {
       toast.error(
         "Đến từ tương lai à? Ngày giao dịch không được lớn hơn hôm nay!",
       );
