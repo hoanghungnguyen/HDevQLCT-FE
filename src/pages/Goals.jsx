@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { goalService } from '../services/goalService';
 import { formatCurrency, formatDate } from '../utils/formatters';
-import { Plus, Target, Trash2, ArrowUpCircle } from 'lucide-react';
+import { Plus, Target, Trash2, ArrowUpCircle, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const Goals = () => {
