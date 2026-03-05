@@ -9,7 +9,8 @@ import {
     BarChart2, 
     Settings, 
     LogOut, 
-    Wallet
+    Wallet,
+    Target
 } from 'lucide-react';
 
 const Sidebar = () => {
@@ -18,10 +19,9 @@ const Sidebar = () => {
 
     const menuItems = [
         { name: 'Tổng quan', path: '/', icon: LayoutDashboard },
-        { name: 'Đầu tư', path: '/invest', icon: TrendingUp }, // dummy route
+        { name: 'Mục tiêu', path: '/goals', icon: Target },
         { name: 'Giao dịch', path: '/transactions', icon: ArrowLeftRight },
-        { name: 'Thẻ', path: '/cards', icon: CreditCard }, // dummy route
-        { name: 'Thống kê', path: '/statistics', icon: BarChart2 }, // dummy route
+        { name: 'Thống kê', path: '/statistics', icon: BarChart2 },
     ];
 
     const bottomItems = [

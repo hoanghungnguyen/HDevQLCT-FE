@@ -10,6 +10,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Transactions from './pages/Transactions';
+import Goals from './pages/Goals';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route path="/" element={<Dashboard />} />
               <Route path="/transactions" element={<Transactions />} />
+              <Route path="/goals" element={<Goals />} />
             </Route>
 
             {/* Fallback 404 */}
