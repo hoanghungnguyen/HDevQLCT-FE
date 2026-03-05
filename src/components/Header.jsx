@@ -1,10 +1,14 @@
 import React from 'react';
 import { Search, Bell, Calendar as CalendarIcon } from 'lucide-react';
 import { formatDate } from '../utils/formatters';
+import { useAuth } from '../context/AuthContext';
 
 const Header = () => {
+    const { user } = useAuth();
+    
     // Tạm thời lấy tên cứng, sau này có thể bóc từ LocalStorage hoặc AuthContext
-    const userName = "Nguyễn Hoàng";
+    const userName = user?.email ? user.email.split('@')[0] : "Người dùng";
+    const initial = userName.substring(0, 2).toUpperCase();
     const today = new Date().toISOString(); 
 
     return (
@@ -45,7 +49,7 @@ const Header = () => {
                 {/* Avatar & Profile */}
                 <div className="flex items-center cursor-pointer bg-white py-1.5 pl-1.5 pr-4 rounded-full shadow-sm border border-gray-50 hover:shadow transition-shadow">
                     <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-[#0DBACC] to-[#C1DDFF] flex items-center justify-center text-white font-bold text-xs mr-3">
-                        NH
+                        {initial}
                     </div>
                     <span className="text-sm font-semibold text-[#303150]">{userName}</span>
                 </div>

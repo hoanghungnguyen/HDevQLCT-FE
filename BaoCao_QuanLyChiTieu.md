@@ -57,7 +57,44 @@ Hệ thống xoay quanh 4 Entity cốt lõi với ràng buộc quan hệ chặt 
 
 ---
 
-## IV. ĐỊNH HƯỚNG PHÁT TRIỂN (TƯƠNG LAI)
+## IV. GIẢI THÍCH LUỒNG HOẠT ĐỘNG CODE CỐT LÕI (DÀNH CHO BÁO CÁO BẢO VỆ)
+
+Để hiểu rõ cách toàn bộ hệ thống phối hợp với nhau, dưới đây là giải thích chi tiết cho 2 luồng thao tác (Flows) quan trọng nhất của ứng dụng: **Đăng nhập & Ghi nhận Giao dịch**.
+
+### 1. Luồng 1: Xác thực người dùng (Đăng ký / Đăng nhập)
+Luồng này đảm bảo an toàn bảo mật, giúp ứng dụng nhận diện chính xác "Ai đang gõ cửa".
+
+*   **Tại Frontend (React - `/login`)**:
+    *   Người dùng nhập Email và Password tại `Login.jsx`.
+    *   Khi bấm nút "Đăng nhập", hàm `handleLogin` sẽ dùng Axios (`api.js`) gọi phương thức POST gửi dữ liệu dạng JSON lên Backend `http://localhost:8080/api/auth/login`.
+*   **Tại Backend (Java - Filter & Controller)**:
+    *   `AuthController` tiếp nhận request. Nó gọi `AuthenticationManager` của Spring Security để kiểm tra so sánh Password người dùng nhập vào với Hash Password băm trong Database.
+    *   Nếu đúng, hệ thống gọi thư viện cấu trúc thành một chuỗi **JWT Token** (Bao gồm Header, Payload chứa Email/UserId, và Chữ ký bí mật).
+    *   Backend trả JWT Token này về lại cho Frontend với Status `200 OK`.
+*   **Tại Frontend (React - `AuthContext`)**:
+    *   Sau khi nhận Token, `AuthContext.jsx` sẽ cất ngay Token này vào giỏ hàng `localStorage` của trình duyệt.
+    *   Kể từ giây phút này, mọi Component trong React sẽ được thông báo trạng thái `isAuthenticated = true` và cho phép mở khoá vào trang Dashboard chính thức.
+
+### 2. Luồng 2: Quy trình Thêm và Quản lý Giao Dịch (Secured Flow)
+Luồng này chứng minh được năng lực kết nối dữ liệu và bảo mật cấp đường hầm (API Protection).
+
+*   **Tại Frontend (React - Modal Thêm Giao Dịch)**:
+    *   Người dùng điền Form (Số tiền, Danh mục, Lời ghi chú).
+    *   Khi Submit, Frontend sẽ đính kèm JWT Token vừa lấy được ở bước Đăng nhập vào phần `Header` của Axios theo cú pháp: `Authorization: Bearer <chuỗi_token>`. Sau đó bắn API `POST /api/transactions`.
+*   **Tại Backend (Java - Security Filter chặn cổng)**:
+    *   Trước khi Request chạm được tới Controller, nó phải lọt qua máy quét `JwtAuthenticationFilter`.
+    *   Filter này móc Token từ Header ra, kiểm tra xem Token có giả mạo hay hết hạn không. Nếu Token chuẩn zin, nó sẽ trích xuất ra thông tin người dùng (Email) và lưu tạm vào `SecurityContext` của luồng (Thread) chạy hiện tại.
+*   **Tại Backend (Java - Controller & Service)**:
+    *   `TransactionController` tiếp nhận yêu cầu. Nó không bao giờ tin tưởng ID người dùng gửi từ Frontend, mà nó sẽ moi ID thẳng từ `SecurityContext` (do Filter vừa nãy xác thực).
+    *   Tầng `TransactionService` lấy ID đó, tìm `User` tương ứng trong Database (`userRepository.findById`). Sau đó tìm `Category` (`categoryRepository.findById`).
+    *   Cuối cùng, khởi tạo đối tượng `Transaction` mới, gán cả `User` và `Category` vào, rồi gọi `transactionRepository.save()` để lưu xuống MySQL.
+*   **Tại Frontend (React - Cập nhật UI)**:
+    *   Backend trả về `201 Created` kèm theo dữ liệu Giao dịch mới toanh.
+    *   Frontend gọi hàm setState để nhét Giao dịch này lên đầu tiên trên danh sách `TransactionHistory.jsx` mà không cần F5 (Reload) lại toàn bộ trang web. Ném thêm 1 cái Popup thông báo màu xanh `react-hot-toast` là hoàn tất giao dịch!
+
+---
+
+## V. ĐỊNH HƯỚNG PHÁT TRIỂN (TƯƠNG LAI)
 - Xây dựng hệ module bảng thiết lập / thiết kế Giới hạn Ngân Sách Hàng Tháng (Monthly Budget Constraints) hiển thị cảnh báo khi chi tiêu vượt quá 80% hạn mức.
 - Quét biên xuất dữ liệu dưới dạng Report Excel / PDF cho người dùng tải về bằng cơ chế xuất File của Backend.
 - Hệ thống gửi thư Cronjobs báo cáo thống kê qua mật khẩu trạm `JavaMailSender` tới hộp thư Email hàng tuần.
