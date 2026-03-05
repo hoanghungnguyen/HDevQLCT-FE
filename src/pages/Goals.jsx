@@ -100,11 +100,11 @@ const Goals = () => {
     };
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-in fade-in zoom-in duration-300">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-in fade-in zoom-in duration-300 transition-colors">
             <div className="flex justify-between items-center mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Mục tiêu tài chính</h1>
-                    <p className="text-gray-500 font-medium">Lên kế hoạch và theo dõi tiến độ tiết kiệm cho những giấc mơ của bạn.</p>
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Mục tiêu tài chính</h1>
+                    <p className="text-gray-500 dark:text-gray-400 font-medium">Lên kế hoạch và theo dõi tiến độ tiết kiệm cho những giấc mơ của bạn.</p>
                 </div>
                 <button 
                     onClick={() => setIsCreateModalOpen(true)}
@@ -119,13 +119,13 @@ const Goals = () => {
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#69ADFF]"></div>
                 </div>
             ) : goals.length === 0 ? (
-                <div className="bg-white rounded-3xl p-16 text-center border border-gray-100 shadow-sm flex flex-col items-center">
-                    <Target className="w-20 h-20 text-[#BDBDCB] mb-6 block mx-auto" strokeWidth={1.5} />
-                    <h3 className="text-xl font-bold text-[#303150] mb-2">Chưa có mục tiêu nào</h3>
-                    <p className="text-gray-500 max-w-sm mb-6">Bạn chưa đặt mục tiêu tiết kiệm nào. Hãy tạo mục tiêu đầu tiên ngay hôm nay nhé!</p>
+                <div className="bg-white dark:bg-[#1E1E2D] rounded-3xl p-16 text-center border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center transition-colors">
+                    <Target className="w-20 h-20 text-[#BDBDCB] dark:text-gray-600 mb-6 block mx-auto" strokeWidth={1.5} />
+                    <h3 className="text-xl font-bold text-[#303150] dark:text-white mb-2">Chưa có mục tiêu nào</h3>
+                    <p className="text-gray-500 dark:text-gray-400 max-w-sm mb-6">Bạn chưa đặt mục tiêu tiết kiệm nào. Hãy tạo mục tiêu đầu tiên ngay hôm nay nhé!</p>
                     <button 
                         onClick={() => setIsCreateModalOpen(true)}
-                        className="bg-[#F7F7F8] text-[#69ADFF] px-6 py-3 rounded-xl font-bold hover:bg-blue-50 transition-colors"
+                        className="bg-[#F7F7F8] dark:bg-[#2A2A3C] text-[#69ADFF] px-6 py-3 rounded-xl font-bold hover:bg-blue-50 dark:hover:bg-[#2A2A3C]/80 transition-colors"
                     >
                         Tạo mục tiêu
                     </button>
@@ -137,23 +137,23 @@ const Goals = () => {
                         const isCompleted = percent >= 100;
                         
                         return (
-                            <div key={goal.id} className="bg-white p-6 rounded-[24px] shadow-sm border border-gray-100 flex flex-col hover:shadow-md transition-shadow relative overflow-hidden group">
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#69ADFF]/5 to-[#0DBACC]/5 rounded-bl-[100px] -z-0"></div>
+                            <div key={goal.id} className="bg-white dark:bg-[#1E1E2D] p-6 rounded-[24px] shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800 flex flex-col hover:shadow-md transition-all relative overflow-hidden group">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#69ADFF]/5 to-[#0DBACC]/5 dark:from-[#69ADFF]/10 dark:to-[#0DBACC]/10 rounded-bl-[100px] -z-0"></div>
                                 
                                 <div className="flex justify-between items-start mb-6 z-10">
                                     <div className="flex items-center space-x-4">
-                                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${isCompleted ? 'bg-[#E3F6EE] text-[#00C48C]' : 'bg-[#EAF3FF] text-[#69ADFF]'}`}>
+                                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-colors ${isCompleted ? 'bg-[#E3F6EE] dark:bg-[#00C48C]/20 text-[#00C48C]' : 'bg-[#EAF3FF] dark:bg-[#69ADFF]/20 text-[#69ADFF]'}`}>
                                             <Target className="w-6 h-6" />
                                         </div>
                                         <div>
-                                            <h3 className="font-bold text-[#303150] text-lg">{goal.name}</h3>
-                                            <span className="text-xs font-semibold text-[#BDBDCB]">Hạn: {formatDate(goal.deadline)}</span>
+                                            <h3 className="font-bold text-[#303150] dark:text-white text-lg">{goal.name}</h3>
+                                            <span className="text-xs font-semibold text-[#BDBDCB] dark:text-gray-500">Hạn: {formatDate(goal.deadline)}</span>
                                         </div>
                                     </div>
                                     
                                     <button 
                                         onClick={() => handleDelete(goal.id)}
-                                        className="text-gray-300 hover:text-red-500 p-2 rounded-xl hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100"
+                                        className="text-gray-300 dark:text-gray-600 hover:text-red-500 dark:hover:text-red-400 p-2 rounded-xl hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors opacity-0 group-hover:opacity-100"
                                     >
                                         <Trash2 className="w-4 h-4" />
                                     </button>
@@ -161,17 +161,17 @@ const Goals = () => {
 
                                 <div className="flex justify-between items-end mb-3 z-10">
                                     <div className="flex flex-col">
-                                        <span className="text-xs font-semibold text-[#7E7F90] mb-1">Đã tích luỹ</span>
-                                        <span className="font-extrabold text-[#303150] text-xl">{formatCurrency(goal.currentAmount)}</span>
+                                        <span className="text-xs font-semibold text-[#7E7F90] dark:text-gray-400 mb-1">Đã tích luỹ</span>
+                                        <span className="font-extrabold text-[#303150] dark:text-white text-xl">{formatCurrency(goal.currentAmount)}</span>
                                     </div>
                                     <div className="flex flex-col items-end">
-                                        <span className="text-xs font-semibold text-[#7E7F90] mb-1">Mục tiêu</span>
-                                        <span className="font-bold text-[#BDBDCB] text-sm">{formatCurrency(goal.targetAmount)}</span>
+                                        <span className="text-xs font-semibold text-[#7E7F90] dark:text-gray-400 mb-1">Mục tiêu</span>
+                                        <span className="font-bold text-[#BDBDCB] dark:text-gray-500 text-sm">{formatCurrency(goal.targetAmount)}</span>
                                     </div>
                                 </div>
 
                                 {/* Progress Bar */}
-                                <div className="w-full h-3 bg-[#F7F7F8] rounded-full overflow-hidden flex mb-2 shadow-inner z-10">
+                                <div className="w-full h-3 bg-[#F7F7F8] dark:bg-[#2A2A3C] rounded-full overflow-hidden flex mb-2 shadow-inner z-10 transition-colors">
                                     <div 
                                         className={`h-full rounded-full transition-all duration-1000 ease-out ${isCompleted ? 'bg-[#00C48C]' : 'bg-gradient-to-r from-[#69ADFF] to-[#0DBACC]'}`} 
                                         style={{ width: `${percent}%` }}
@@ -182,15 +182,15 @@ const Goals = () => {
                                     {isCompleted ? (
                                         <span className="text-[#00C48C]">Hoàn thành 🎉</span>
                                     ) : (
-                                        <span className="text-[#7E7F90]">Còn {formatCurrency(goal.targetAmount - goal.currentAmount)}</span>
+                                        <span className="text-[#7E7F90] dark:text-gray-400">Còn {formatCurrency(goal.targetAmount - goal.currentAmount)}</span>
                                     )}
                                 </div>
 
-                                <div className="mt-6 pt-6 border-t border-gray-50 flex justify-center z-10">
+                                <div className="mt-6 pt-6 border-t border-gray-50 dark:border-gray-800 flex justify-center z-10 transition-colors">
                                     <button 
                                         onClick={() => openAddMoneyModal(goal)}
                                         disabled={isCompleted}
-                                        className={`w-full py-3 rounded-xl font-bold flex items-center justify-center transition-all ${isCompleted ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-[#EAF3FF] text-[#69ADFF] hover:bg-[#69ADFF] hover:text-white'}`}
+                                        className={`w-full py-3 rounded-xl font-bold flex items-center justify-center transition-all ${isCompleted ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed' : 'bg-[#EAF3FF] dark:bg-[#69ADFF]/10 text-[#69ADFF] hover:bg-[#69ADFF] hover:text-white'}`}
                                     >
                                         <ArrowUpCircle className="w-5 h-5 mr-2" /> 
                                         {isCompleted ? 'Đã đạt mục tiêu' : 'Thêm tiền vào mục tiêu'}
@@ -204,36 +204,36 @@ const Goals = () => {
 
             {/* Modal Tạo Mục Tiêu Mới */}
             {isCreateModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
-                        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100 bg-[#F7F7F8]">
-                            <h3 className="text-lg font-bold text-[#303150]">Tạo mục tiêu mới</h3>
-                            <button onClick={() => setIsCreateModalOpen(false)} className="text-[#BDBDCB] hover:text-red-500 transition-colors">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 dark:bg-black/60 backdrop-blur-sm p-4">
+                    <div className="bg-white dark:bg-[#1E1E2D] rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200 transition-colors">
+                        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-[#F7F7F8] dark:bg-[#1A1A24] transition-colors">
+                            <h3 className="text-lg font-bold text-[#303150] dark:text-white">Tạo mục tiêu mới</h3>
+                            <button onClick={() => setIsCreateModalOpen(false)} className="text-[#BDBDCB] dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors">
                                 <X className="w-6 h-6" />
                             </button>
                         </div>
                         <form onSubmit={handleCreateGoal} className="p-6 space-y-5">
                             <div>
-                                <label className="block text-sm font-semibold text-[#7E7F90] mb-2">Tên mục tiêu</label>
+                                <label className="block text-sm font-semibold text-[#7E7F90] dark:text-gray-400 mb-2">Tên mục tiêu</label>
                                 <input 
                                     type="text" name="name" value={formData.name} onChange={handleChange} required
                                     placeholder="Ví dụ: Mua iPhone 16"
-                                    className="w-full bg-[#F7F7F8] border-none rounded-xl px-4 py-3 text-[#303150] font-medium focus:ring-2 focus:ring-[#69ADFF] outline-none"
+                                    className="w-full bg-[#F7F7F8] dark:bg-[#2A2A3C] border border-transparent dark:border-gray-700 rounded-xl px-4 py-3 text-[#303150] dark:text-white font-medium focus:ring-2 focus:ring-[#69ADFF] outline-none transition-colors"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-[#7E7F90] mb-2">Số tiền cần đạt (VNĐ)</label>
+                                <label className="block text-sm font-semibold text-[#7E7F90] dark:text-gray-400 mb-2">Số tiền cần đạt (VNĐ)</label>
                                 <input 
                                     type="number" name="targetAmount" value={formData.targetAmount} onChange={handleChange} required min="1000"
                                     placeholder="50000000"
-                                    className="w-full bg-[#F7F7F8] border-none rounded-xl px-4 py-3 text-[#303150] font-bold text-lg focus:ring-2 focus:ring-[#69ADFF] outline-none"
+                                    className="w-full bg-[#F7F7F8] dark:bg-[#2A2A3C] border border-transparent dark:border-gray-700 rounded-xl px-4 py-3 text-[#303150] dark:text-white font-bold text-lg focus:ring-2 focus:ring-[#69ADFF] outline-none transition-colors"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-[#7E7F90] mb-2">Ngày dự kiến hoàn thành</label>
+                                <label className="block text-sm font-semibold text-[#7E7F90] dark:text-gray-400 mb-2">Ngày dự kiến hoàn thành</label>
                                 <input 
                                     type="date" name="deadline" value={formData.deadline} onChange={handleChange} required
-                                    className="w-full bg-[#F7F7F8] border-none rounded-xl px-4 py-3 text-[#303150] font-medium focus:ring-2 focus:ring-[#69ADFF] outline-none"
+                                    className="w-full bg-[#F7F7F8] dark:bg-[#2A2A3C] border border-transparent dark:border-gray-700 rounded-xl px-4 py-3 text-[#303150] dark:text-white font-medium focus:ring-2 focus:ring-[#69ADFF] outline-none transition-colors"
                                 />
                             </div>
                             <button type="submit" className="w-full py-3 bg-[#69ADFF] hover:bg-[#5a9aeb] text-white font-bold rounded-xl transition-colors shadow-md shadow-blue-200 mt-2">
@@ -246,17 +246,17 @@ const Goals = () => {
 
             {/* Modal Nạp Tiền */}
             {isAddMoneyModalOpen && selectedGoal && (
-                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">
-                        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100 bg-[#F7F7F8]">
-                            <h3 className="text-lg font-bold text-[#303150]">Nạp tiền</h3>
-                            <button onClick={() => setIsAddMoneyModalOpen(false)} className="text-[#BDBDCB] hover:text-red-500 transition-colors">
+                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 dark:bg-black/60 backdrop-blur-sm p-4">
+                    <div className="bg-white dark:bg-[#1E1E2D] rounded-2xl shadow-xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200 transition-colors">
+                        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-[#F7F7F8] dark:bg-[#1A1A24] transition-colors">
+                            <h3 className="text-lg font-bold text-[#303150] dark:text-white">Nạp tiền</h3>
+                            <button onClick={() => setIsAddMoneyModalOpen(false)} className="text-[#BDBDCB] dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors">
                                 <X className="w-6 h-6" />
                             </button>
                         </div>
                         <form onSubmit={handleAddMoney} className="p-6">
-                            <p className="text-sm font-medium text-gray-500 mb-4 text-center">
-                                Thêm tiền vào mục tiêu <span className="font-bold text-[#303150]">{selectedGoal.name}</span>
+                            <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-4 text-center">
+                                Thêm tiền vào mục tiêu <span className="font-bold text-[#303150] dark:text-white">{selectedGoal.name}</span>
                             </p>
                             <div className="mb-6 relative">
                                 <input 
@@ -267,7 +267,7 @@ const Goals = () => {
                                     min="1"
                                     max={selectedGoal.targetAmount - selectedGoal.currentAmount}
                                     placeholder="Nhập số tiền..."
-                                    className="w-full bg-[#F7F7F8] border-none rounded-xl px-4 py-4 text-[#303150] font-bold text-2xl text-center focus:ring-2 focus:ring-[#0DBACC] outline-none"
+                                    className="w-full bg-[#F7F7F8] dark:bg-[#2A2A3C] border border-transparent dark:border-gray-700 rounded-xl px-4 py-4 text-[#303150] dark:text-white font-bold text-2xl text-center focus:ring-2 focus:ring-[#0DBACC] outline-none transition-colors"
                                 />
                                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[#BDBDCB] font-bold">₫</span>
                             </div>

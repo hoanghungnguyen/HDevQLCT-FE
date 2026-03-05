@@ -16,7 +16,7 @@ import Statistics from './pages/Statistics';
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-[#F7F7F8]">
+      <div className="min-h-screen bg-[#F7F7F8] dark:bg-[#12121A] transition-colors duration-300">
         <Toaster position="top-right" />
         <Routes>
             {/* Public Routes */}

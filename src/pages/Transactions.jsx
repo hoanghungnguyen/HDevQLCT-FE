@@ -97,17 +97,17 @@ const Transactions = () => {
 
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">Lịch sử giao dịch</h1>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 transition-colors duration-300">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Lịch sử giao dịch</h1>
             
             {/* Filter Section */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 flex flex-wrap gap-4 items-end">
+            <div className="bg-white dark:bg-[#1E1E2D] rounded-xl shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800 p-4 mb-6 flex flex-wrap gap-4 items-end transition-colors duration-300">
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Tháng</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tháng</label>
                     <select 
                         value={filterMonth} 
                         onChange={(e) => setFilterMonth(Number(e.target.value))}
-                        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-[#2A2A3C] dark:text-gray-200 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors"
                     >
                         {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
                             <option key={m} value={m}>Tháng {m}</option>
@@ -115,18 +115,18 @@ const Transactions = () => {
                     </select>
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Năm</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Năm</label>
                     <input 
                         type="number"
                         value={filterYear}
                         onChange={(e) => setFilterYear(Number(e.target.value))}
-                        className="block w-24 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        className="block w-24 px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-[#2A2A3C] dark:text-gray-200 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors"
                     />
                 </div>
                 <div>
                     <button 
                         onClick={fetchData}
-                        className="bg-gray-100 text-[#7E7F90] px-4 py-2 rounded-xl text-sm font-bold hover:bg-gray-200 transition"
+                        className="bg-gray-100 dark:bg-[#2A2A3C] text-[#7E7F90] dark:text-gray-300 px-4 py-2 rounded-xl text-sm font-bold hover:bg-gray-200 dark:hover:bg-gray-700 transition"
                     >
                         Làm mới
                     </button>
@@ -143,32 +143,32 @@ const Transactions = () => {
             </div>
 
             {/* List Section */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="bg-white dark:bg-[#1E1E2D] rounded-xl shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800 overflow-hidden transition-colors duration-300">
                 {loading ? (
-                    <div className="p-10 text-center text-gray-500">Đang tải danh sách giao dịch...</div>
+                    <div className="p-10 text-center text-gray-500 dark:text-gray-400">Đang tải danh sách giao dịch...</div>
                 ) : transactions.length === 0 ? (
-                    <div className="p-10 text-center text-gray-500">
+                    <div className="p-10 text-center text-gray-500 dark:text-gray-400">
                         Không có giao dịch nào trong khoảng thời gian này.
                     </div>
                 ) : (
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
+                        <thead className="bg-gray-50 dark:bg-[#1A1A24] transition-colors">
                             <tr>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-[#BDBDCB] uppercase tracking-wider">Ngày</th>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-[#BDBDCB] uppercase tracking-wider">Mô tả</th>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-[#BDBDCB] uppercase tracking-wider">Danh mục</th>
-                                <th scope="col" className="px-6 py-4 text-right text-xs font-bold text-[#BDBDCB] uppercase tracking-wider">Số tiền</th>
-                                <th scope="col" className="px-6 py-4 text-center text-xs font-bold text-[#BDBDCB] uppercase tracking-wider w-24">Thao tác</th>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-[#BDBDCB] dark:text-gray-400 uppercase tracking-wider">Ngày</th>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-[#BDBDCB] dark:text-gray-400 uppercase tracking-wider">Mô tả</th>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-[#BDBDCB] dark:text-gray-400 uppercase tracking-wider">Danh mục</th>
+                                <th scope="col" className="px-6 py-4 text-right text-xs font-bold text-[#BDBDCB] dark:text-gray-400 uppercase tracking-wider">Số tiền</th>
+                                <th scope="col" className="px-6 py-4 text-center text-xs font-bold text-[#BDBDCB] dark:text-gray-400 uppercase tracking-wider w-24">Thao tác</th>
                             </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-gray-50">
+                        <tbody className="bg-white dark:bg-[#1E1E2D] divide-y divide-gray-50 dark:divide-gray-800 transition-colors">
                             {transactions.map((tx) => (
-                                <tr key={tx.id} className="hover:bg-gray-50/50 transition-colors">
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#7E7F90]">
+                                <tr key={tx.id} className="hover:bg-gray-50/50 dark:hover:bg-[#2A2A3C]/40 transition-colors">
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#7E7F90] dark:text-gray-400">
                                         {formatDate(tx.transactionDate)}
                                     </td>
-                                    <td className="px-6 py-4 text-sm text-[#303150] font-bold">
-                                        {tx.note || <span className="text-[#BDBDCB] italic font-medium">Không có ghi chú</span>}
+                                    <td className="px-6 py-4 text-sm text-[#303150] dark:text-white font-bold">
+                                        {tx.note || <span className="text-[#BDBDCB] dark:text-gray-500 italic font-medium">Không có ghi chú</span>}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <span className={`px-3 py-1 rounded-full text-xs font-bold ${tx.type === 'income' ? 'bg-[#E3D6FF]/30 text-[#9F7FE0]' : 'bg-[#FFC0DB]/30 text-[#F18AB5]'}`}>
@@ -176,7 +176,7 @@ const Transactions = () => {
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-extrabold text-right">
-                                        <span className={tx.type === 'income' ? 'text-[#0DBACC]' : 'text-[#303150]'}>
+                                        <span className={tx.type === 'income' ? 'text-[#0DBACC] dark:text-[#26D0E0]' : 'text-[#303150] dark:text-white'}>
                                             {tx.type === 'income' ? '+' : '-'}{formatCurrency(tx.amount)}
                                         </span>
                                     </td>

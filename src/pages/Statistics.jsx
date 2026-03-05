@@ -3,8 +3,10 @@ import { transactionService } from '../services/transactionService';
 import { formatCurrency } from '../utils/formatters';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { PieChart, ListFilter, TrendingUp } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 const Statistics = () => {
+    const { theme } = useTheme();
     // Filters Default: Current Month & Year
     const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -61,14 +63,14 @@ const Statistics = () => {
     const CustomTooltip = ({ active, payload, label }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="bg-white p-4 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 min-w-[200px]">
-                    <p className="font-bold text-[#303150] mb-2 pb-2 border-b border-gray-50">{label}</p>
+                <div className="bg-white dark:bg-[#1F2937] p-4 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 dark:border-gray-700 min-w-[200px] transition-colors">
+                    <p className="font-bold text-[#303150] dark:text-white mb-2 pb-2 border-b border-gray-50 dark:border-gray-700">{label}</p>
                     {payload.map((entry, index) => (
                         <div key={index} className="flex justify-between items-center py-1">
                             <span style={{ color: entry.color }} className="font-semibold text-sm mr-4">
                                 {entry.name}:
                             </span>
-                            <span className="font-bold text-[#303150]">
+                            <span className="font-bold text-[#303150] dark:text-white">
                                 {formatCurrency(entry.value)}
                             </span>
                         </div>
@@ -80,32 +82,32 @@ const Statistics = () => {
     };
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-in fade-in zoom-in duration-300">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-in fade-in zoom-in duration-300 transition-colors">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Thống kê & Báo cáo</h1>
-                    <p className="text-gray-500 font-medium">Theo dõi xu hướng dòng tiền và phân bổ chi tiêu chi tiết.</p>
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Thống kê & Báo cáo</h1>
+                    <p className="text-gray-500 dark:text-gray-400 font-medium">Theo dõi xu hướng dòng tiền và phân bổ chi tiêu chi tiết.</p>
                 </div>
                 
                 {/* Global Filters */}
-                <div className="flex bg-white p-2 rounded-2xl shadow-sm border border-gray-100 gap-2">
-                    <div className="flex items-center bg-[#F7F7F8] rounded-xl px-3 py-1.5">
+                <div className="flex bg-white dark:bg-[#1E1E2D] p-2 rounded-2xl shadow-sm dark:shadow-none border border-gray-100 dark:border-gray-800 gap-2 transition-colors">
+                    <div className="flex items-center bg-[#F7F7F8] dark:bg-[#2A2A3C] rounded-xl px-3 py-1.5 transition-colors">
                         <ListFilter className="w-4 h-4 text-gray-400 mr-2" />
                         <select 
                             value={selectedMonth} 
                             onChange={(e) => setSelectedMonth(Number(e.target.value))}
-                            className="bg-transparent border-none text-sm font-bold text-[#303150] focus:ring-0 cursor-pointer outline-none"
+                            className="bg-transparent border-none text-sm font-bold text-[#303150] dark:text-white focus:ring-0 cursor-pointer outline-none"
                         >
                             {months.map(m => (
                                 <option key={m} value={m}>Tháng {m}</option>
                             ))}
                         </select>
                     </div>
-                    <div className="flex items-center bg-[#F7F7F8] rounded-xl px-3 py-1.5">
+                    <div className="flex items-center bg-[#F7F7F8] dark:bg-[#2A2A3C] rounded-xl px-3 py-1.5 transition-colors">
                         <select 
                             value={selectedYear} 
                             onChange={(e) => setSelectedYear(Number(e.target.value))}
-                            className="bg-transparent border-none text-sm font-bold text-[#303150] focus:ring-0 cursor-pointer outline-none pl-2 pr-6"
+                            className="bg-transparent border-none text-sm font-bold text-[#303150] dark:text-white focus:ring-0 cursor-pointer outline-none pl-2 pr-6"
                         >
                             {years.map(y => (
                                 <option key={y} value={y}>Năm {y}</option>
@@ -119,14 +121,14 @@ const Statistics = () => {
                 
                 {/* Left Column: Monthly Trend (2/3 width) */}
                 <div className="lg:col-span-2 space-y-8">
-                    <div className="bg-white p-6 md:p-8 rounded-[24px] shadow-sm border border-gray-50 flex flex-col h-[500px]">
+                    <div className="bg-white dark:bg-[#1E1E2D] p-6 md:p-8 rounded-[24px] shadow-sm dark:shadow-none border border-gray-50 dark:border-gray-800 flex flex-col h-[500px] transition-colors">
                         <div className="flex items-center mb-8">
-                            <div className="w-12 h-12 rounded-2xl bg-[#EAF3FF] flex items-center justify-center mr-4 text-[#69ADFF]">
+                            <div className="w-12 h-12 rounded-2xl bg-[#EAF3FF] dark:bg-[#69ADFF]/20 flex items-center justify-center mr-4 text-[#69ADFF] transition-colors">
                                 <TrendingUp className="w-6 h-6" />
                             </div>
                             <div>
-                                <h3 className="text-xl font-bold text-[#303150]">Xu hướng {selectedYear}</h3>
-                                <p className="text-sm text-[#7E7F90] font-medium">Tổng thu & chi 12 tháng</p>
+                                <h3 className="text-xl font-bold text-[#303150] dark:text-white">Xu hướng {selectedYear}</h3>
+                                <p className="text-sm text-[#7E7F90] dark:text-gray-400 font-medium">Tổng thu & chi 12 tháng</p>
                             </div>
                         </div>
 
@@ -143,24 +145,24 @@ const Statistics = () => {
                                         barSize={12}
                                         barGap={4}
                                     >
-                                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={theme === 'dark' ? '#374151' : '#f0f0f0'} />
                                         <XAxis 
                                             dataKey="name" 
                                             axisLine={false} 
                                             tickLine={false} 
-                                            tick={{ fill: '#BDBDCB', fontSize: 13, fontWeight: 600 }}
+                                            tick={{ fill: theme === 'dark' ? '#6B7280' : '#BDBDCB', fontSize: 13, fontWeight: 600 }}
                                             dy={15}
                                         />
                                         <YAxis 
                                             axisLine={false} 
                                             tickLine={false} 
-                                            tick={{ fill: '#BDBDCB', fontSize: 13, fontWeight: 500 }}
+                                            tick={{ fill: theme === 'dark' ? '#6B7280' : '#BDBDCB', fontSize: 13, fontWeight: 500 }}
                                             tickFormatter={(value) => value >= 1000000 ? `${(value / 1000000).toFixed(0)}M` : value}
                                         />
-                                        <Tooltip content={<CustomTooltip />} cursor={{ fill: '#f8f9fa' }} />
+                                        <Tooltip content={<CustomTooltip />} cursor={{ fill: theme === 'dark' ? '#2A2A3C' : '#f8f9fa' }} />
                                         <Legend 
                                             iconType="circle" 
-                                            wrapperStyle={{ paddingTop: '20px', fontWeight: 'bold', fontSize: '14px', color: '#303150' }}
+                                            wrapperStyle={{ paddingTop: '20px', fontWeight: 'bold', fontSize: '14px', color: theme === 'dark' ? '#F9FAFB' : '#303150' }}
                                         />
                                         <Bar dataKey="Thu nhập" fill="#69ADFF" radius={[4, 4, 4, 4]} />
                                         <Bar dataKey="Chi tiêu" fill="#F18AB5" radius={[4, 4, 4, 4]} />
@@ -173,15 +175,15 @@ const Statistics = () => {
 
                 {/* Right Column: Top Categories Breakdown (1/3 width) */}
                 <div className="lg:col-span-1">
-                    <div className="bg-white p-6 md:p-8 rounded-[24px] shadow-sm border border-gray-50 flex flex-col h-[500px]">
+                    <div className="bg-white dark:bg-[#1E1E2D] p-6 md:p-8 rounded-[24px] shadow-sm dark:shadow-none border border-gray-50 dark:border-gray-800 flex flex-col h-[500px] transition-colors">
                         <div className="flex justify-between items-center mb-6">
                             <div className="flex items-center">
-                                <div className="w-12 h-12 rounded-2xl bg-[#FFF0f5] flex items-center justify-center mr-4 text-[#F18AB5]">
+                                <div className="w-12 h-12 rounded-2xl bg-[#FFF0f5] dark:bg-[#F18AB5]/20 flex items-center justify-center mr-4 text-[#F18AB5] transition-colors">
                                     <PieChart className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-bold text-[#303150]">Phân bổ chi tiêu</h3>
-                                    <p className="text-xs text-[#7E7F90] font-medium">Tháng {selectedMonth}/{selectedYear}</p>
+                                    <h3 className="text-lg font-bold text-[#303150] dark:text-white">Phân bổ chi tiêu</h3>
+                                    <p className="text-xs text-[#7E7F90] dark:text-gray-400 font-medium">Tháng {selectedMonth}/{selectedYear}</p>
                                 </div>
                             </div>
                         </div>
@@ -205,15 +207,15 @@ const Statistics = () => {
                                         return (
                                             <div key={index} className="flex flex-col">
                                                 <div className="flex justify-between items-end mb-2">
-                                                    <span className="font-bold text-[#303150] text-sm truncate pr-2" title={cat.categoryName}>
+                                                    <span className="font-bold text-[#303150] dark:text-white text-sm truncate pr-2" title={cat.categoryName}>
                                                         {index + 1}. {cat.categoryName}
                                                     </span>
                                                     <div className="flex flex-col items-end shrink-0">
-                                                        <span className="font-bold text-[#303150] text-sm">{formatCurrency(cat.totalAmount)}</span>
-                                                        <span className="text-xs font-bold text-gray-400">{cat.percentage}%</span>
+                                                        <span className="font-bold text-[#303150] dark:text-white text-sm">{formatCurrency(cat.totalAmount)}</span>
+                                                        <span className="text-xs font-bold text-gray-400 dark:text-gray-500">{cat.percentage}%</span>
                                                     </div>
                                                 </div>
-                                                <div className="w-full h-2 bg-[#F7F7F8] rounded-full overflow-hidden">
+                                                <div className="w-full h-2 bg-[#F7F7F8] dark:bg-[#2A2A3C] rounded-full overflow-hidden transition-colors">
                                                     <div 
                                                         className={`h-full ${color} rounded-full transition-all duration-1000`} 
                                                         style={{ width: `${cat.percentage}%` }}

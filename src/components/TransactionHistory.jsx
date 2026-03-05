@@ -12,9 +12,9 @@ const TransactionHistory = ({ transactions }) => {
     };
 
     return (
-        <div className="bg-white p-6 rounded-[20px] shadow-sm border border-gray-50 flex flex-col col-span-1 lg:col-span-2 min-h-[350px]">
+        <div className="bg-white dark:bg-[#1E1E2D] p-6 rounded-[20px] shadow-sm dark:shadow-none border border-gray-50 dark:border-gray-800 flex flex-col col-span-1 lg:col-span-2 min-h-[350px] transition-colors duration-300">
             <div className="flex justify-between items-center mb-6">
-                <h3 className="text-lg font-bold text-[#303150]">Lịch sử giao dịch</h3>
+                <h3 className="text-lg font-bold text-[#303150] dark:text-white">Lịch sử giao dịch</h3>
                 <div className="flex space-x-4 text-sm font-medium">
                     <span className="text-[#69ADFF] cursor-pointer">Gần đây</span>
                     <span className="text-[#BDBDCB] hover:text-[#7E7F90] cursor-pointer transition">Cũ nhất</span>
@@ -25,40 +25,40 @@ const TransactionHistory = ({ transactions }) => {
             <div className="overflow-x-auto">
                 <table className="min-w-full">
                     <thead>
-                        <tr className="text-left text-[#BDBDCB] text-xs font-semibold uppercase tracking-wider border-b border-gray-50">
+                        <tr className="text-left text-[#BDBDCB] dark:text-gray-400 text-xs font-semibold uppercase tracking-wider border-b border-gray-50 dark:border-gray-800">
                             <th className="pb-3 pl-2">Người nhận / Ghi chú</th>
                             <th className="pb-3">Loại</th>
                             <th className="pb-3">Ngày</th>
                             <th className="pb-3 text-right pr-2">Số tiền</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-50">
+                    <tbody className="divide-y divide-gray-50 dark:divide-gray-800">
                         {transactions && transactions.length > 0 ? (
                             transactions.slice(0, 5).map((tx) => (
-                                <tr key={tx.id} className="hover:bg-gray-50/50 transition-colors cursor-default">
+                                <tr key={tx.id} className="hover:bg-gray-50/50 dark:hover:bg-[#2A2A3C]/40 transition-colors cursor-default">
                                     <td className="py-4 pl-2">
                                         <div className="flex items-center">
-                                            <div className="w-10 h-10 rounded-full bg-[#F7F7F8] flex items-center justify-center mr-4">
+                                            <div className="w-10 h-10 rounded-full bg-[#F7F7F8] dark:bg-[#2A2A3C] flex items-center justify-center mr-4 transition-colors">
                                                 {getIcon(tx.note || tx.categoryName)}
                                             </div>
                                             <div className="flex flex-col">
-                                                <span className="text-sm font-bold text-[#303150]">
+                                                <span className="text-sm font-bold text-[#303150] dark:text-white">
                                                     {tx.note || tx.categoryName || 'Giao dịch không tên'}
                                                 </span>
-                                                <span className="text-xs font-semibold text-[#BDBDCB] mt-0.5">
+                                                <span className="text-xs font-semibold text-[#BDBDCB] dark:text-gray-500 mt-0.5">
                                                     {tx.categoryName || 'Chưa phân loại'}
                                                 </span>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="py-4 text-sm font-semibold text-[#7E7F90]">
+                                    <td className="py-4 text-sm font-semibold text-[#7E7F90] dark:text-gray-400">
                                         {tx.type === 'income' ? "Thu nhập" : "Chi tiêu"}
                                     </td>
-                                    <td className="py-4 text-sm font-semibold text-[#7E7F90]">
+                                    <td className="py-4 text-sm font-semibold text-[#7E7F90] dark:text-gray-400">
                                         {formatDate(tx.transactionDate)}
                                     </td>
                                     <td className="py-4 text-right pr-2">
-                                        <span className={`text-sm font-extrabold ${tx.type === 'income' ? 'text-[#0DBACC]' : 'text-[#303150]'}`}>
+                                        <span className={`text-sm font-extrabold ${tx.type === 'income' ? 'text-[#0DBACC] dark:text-[#26D0E0]' : 'text-[#303150] dark:text-white'}`}>
                                             {tx.type === 'income' ? '+' : '-'}{formatCurrency(tx.amount)}
                                         </span>
                                     </td>
