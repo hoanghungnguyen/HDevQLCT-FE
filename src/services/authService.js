@@ -7,7 +7,12 @@ export const authService = {
     },
     
     register: async (username, email, password) => {
-        const response = await api.post('/users/register', { username, email, password });
+        // Backend entity User.java expects the field 'passwordHash' instead of 'password'
+        const response = await api.post('/users/register', { 
+            username, 
+            email, 
+            passwordHash: password 
+        });
         return response.data;
     }
 };
